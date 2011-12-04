@@ -7,13 +7,15 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
 
 /**
  * @author jsidlosky
  * 
  */
-public class Game extends BasicGame {
+public class Game extends BasicGame implements KeyListener {
 
 	/**
 	 * Resources
@@ -34,7 +36,7 @@ public class Game extends BasicGame {
 	/**
 	 * Player
 	 */
-	protected final int playerX = 0;
+	protected final int playerX = 4;
 	protected final int playerY = 2;
 
 	/**
@@ -55,8 +57,22 @@ public class Game extends BasicGame {
 	 */
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		// Set vertical sync to true
+		gc.setVSync(true);
+		
+		// Load our resources
 		brick = new Image("res/brick.png");
 		player = new Image("res/player.png");
+		
+		// Configure our input system
+		Input input = gc.getInput();
+	
+		input.addKeyListener(this);
+	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		System.out.println("Key[" + key + "]: " + c);
 	}
 	
 	/**
@@ -64,6 +80,7 @@ public class Game extends BasicGame {
 	 */
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
+		
 	}
 
 	/**
