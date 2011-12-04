@@ -3,25 +3,40 @@
  */
 package com.jsidlosky.javagfx;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
+
+import com.jsidlosky.javagfx.engine.Entity;
+import com.jsidlosky.javagfx.engine.component.movement.PlayerMovementComponent;
+import com.jsidlosky.javagfx.engine.component.render.ImageRenderComponent;
 
 /**
  * @author jsidlosky
  * 
  */
-public class Game extends BasicGame implements KeyListener {
+public class Game extends BasicGame {
 
 	/**
 	 * Resources
 	 */
-	protected Image brick = null;
-	protected Image player = null;
+	protected Image brickImage = null;
+	protected Image playerImage = null;
+
+	/**
+	 * Entities
+	 */
+	Entity playerEntity = null;
+
+	/**
+	 * Level Entities
+	 */
+	ArrayList<Entity> mapEntities = new ArrayList<Entity>();
 
 	/**
 	 * Level
@@ -29,14 +44,13 @@ public class Game extends BasicGame implements KeyListener {
 	protected final int mapHeight = 2;
 	protected final int mapWidth = 2;
 	protected final int mapData[][] = { { 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-										{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-										{ 1, 1, 1, 1, 0, 1, 1, 1, 1, 1 } };
+			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+			{ 1, 1, 1, 1, 0, 1, 1, 1, 1, 1 } };
 
 	/**
 	 * Player
 	 */
-	protected final int playerX = 4;
+	protected final int playerX = 3;
 	protected final int playerY = 2;
 
 	/**
@@ -59,48 +73,55 @@ public class Game extends BasicGame implements KeyListener {
 	public void init(GameContainer gc) throws SlickException {
 		// Set vertical sync to true
 		gc.setVSync(true);
-		
+
 		// Load our resources
-		brick = new Image("res/brick.png");
-		player = new Image("res/player.png");
-		
-		// Configure our input system
-		Input input = gc.getInput();
-	
-		input.addKeyListener(this);
+		brickImage = new Image("res/brick.png");
+		playerImage = new Image("res/player.png");
+
+		playerEntity = new Entity("player");
+		playerEntity.AddComponent(new ImageRenderComponent("PlayerRender", playerImage));
+		playerEntity.AddComponent(new PlayerMovementComponent("PlayerMovement"));
+		playerEntity.setPosition(new Vector2f(playerX * 16, playerY * 16 + 300));
+
+		// Load the map entities
+		for (int row = 0; row < mapData.length; row++) {
+
+			for (int col = 0; col < mapData[row].length; col++) {
+
+				if (mapData[row][col] > 0) {
+					Entity mapEntity = new Entity("brick");
+					mapEntity.AddComponent(new ImageRenderComponent("BrickRender", brickImage));
+					mapEntity.setPosition(new Vector2f(col * 16, row * 16 + 300));
+					mapEntities.add(mapEntity);
+				}
+			}
+		}
 	}
-	
-	@Override
-	public void keyPressed(int key, char c) {
-		System.out.println("Key[" + key + "]: " + c);
-	}
-	
+
 	/**
 	 * Update the game state.
 	 */
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
+		for(Entity e : mapEntities) {
+			e.update(gc, delta);
+		}
 		
+		playerEntity.update(gc, delta);
 	}
 
 	/**
 	 * Render the current game state to the display.
 	 */
 	@Override
-	public void render(GameContainer gc, Graphics g) throws SlickException {
-
-		final int scale = 1;
-		final int y_offset = 300;
-
-		// Render the map
-		for (int row = 0; row < mapData.length; row++) {
-			for (int col = 0; col < mapData[row].length; col++) {
-				if (mapData[row][col] > 0)
-					brick.draw(col * 16, row * 16 + y_offset, scale);
-			}
+	public void render(GameContainer gc, Graphics gr) throws SlickException {
+	
+		// Render the map entities
+		for(Entity e : mapEntities) {
+			e.render(gc, gr);
 		}
 
 		// Render the player
-		player.draw(playerX * 16, playerY * 16 + y_offset, scale);
+		playerEntity.render(gc, gr);
 	}
 }

@@ -1,19 +1,18 @@
 /**
  * 
  */
-package engine;
+package com.jsidlosky.javagfx.engine;
 
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.state.StateBasedGame;
 
-import engine.component.Component;
+import com.jsidlosky.javagfx.engine.component.Component;
+import com.jsidlosky.javagfx.engine.component.render.RenderComponent;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Entity.
  * 

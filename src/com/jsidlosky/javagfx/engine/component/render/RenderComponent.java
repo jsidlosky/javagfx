@@ -1,12 +1,14 @@
 /**
  * 
  */
-package engine;
+package com.jsidlosky.javagfx.engine.component.render;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
-import engine.component.Component;
+import com.jsidlosky.javagfx.engine.component.Component;
+
+
 
 /**
  * @author jsidlosky
@@ -14,6 +16,11 @@ import engine.component.Component;
  */
 public abstract class RenderComponent extends Component {
 	 
+    /**
+     * Instantiates a new render component.
+     *
+     * @param id the id
+     */
     public RenderComponent(String id)
     {
 	this.id = id;
