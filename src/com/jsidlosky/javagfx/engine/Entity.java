@@ -25,7 +25,7 @@ public class Entity {
 
 	/** The position. */
 	Vector2f position;
-	
+		
 	/** The scale. */
 	float scale;
 	
@@ -60,7 +60,7 @@ public class Entity {
 	 * @param component
 	 *            the component
 	 */
-	public void AddComponent(Component component) {
+	public void addComponent(Component component) {
 		if (RenderComponent.class.isInstance(component))
 			renderComponent = (RenderComponent) component;
 
@@ -92,7 +92,7 @@ public class Entity {
 	public Vector2f getPosition() {
 		return position;
 	}
-
+	
 	/**
 	 * Gets the scale.
 	 * 

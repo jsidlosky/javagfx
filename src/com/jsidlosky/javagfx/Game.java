@@ -13,8 +13,10 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 import com.jsidlosky.javagfx.engine.Entity;
+import com.jsidlosky.javagfx.engine.component.CollisionComponent;
 import com.jsidlosky.javagfx.engine.component.movement.PlayerMovementComponent;
 import com.jsidlosky.javagfx.engine.component.render.ImageRenderComponent;
+import com.jsidlosky.javagfx.map.MapData;
 
 /**
  * @author jsidlosky
@@ -37,15 +39,6 @@ public class Game extends BasicGame {
 	 * Level Entities
 	 */
 	ArrayList<Entity> mapEntities = new ArrayList<Entity>();
-
-	/**
-	 * Level
-	 */
-	protected final int mapHeight = 2;
-	protected final int mapWidth = 2;
-	protected final int mapData[][] = { { 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-			{ 1, 1, 1, 1, 0, 1, 1, 1, 1, 1 } };
 
 	/**
 	 * Player
@@ -79,18 +72,21 @@ public class Game extends BasicGame {
 		playerImage = new Image("res/player.png");
 
 		playerEntity = new Entity("player");
-		playerEntity.AddComponent(new ImageRenderComponent("PlayerRender", playerImage));
-		playerEntity.AddComponent(new PlayerMovementComponent("PlayerMovement"));
+		playerEntity.addComponent(new ImageRenderComponent("PlayerRender", playerImage));
+		playerEntity.addComponent(new CollisionComponent("Collision", playerImage.getWidth(),
+				playerImage.getHeight()));
+		playerEntity.addComponent(new PlayerMovementComponent("PlayerMovement"));
 		playerEntity.setPosition(new Vector2f(playerX * 16, playerY * 16 + 300));
 
 		// Load the map entities
+		int mapData[][] = MapData.getMapData();
 		for (int row = 0; row < mapData.length; row++) {
 
 			for (int col = 0; col < mapData[row].length; col++) {
 
 				if (mapData[row][col] > 0) {
 					Entity mapEntity = new Entity("brick");
-					mapEntity.AddComponent(new ImageRenderComponent("BrickRender", brickImage));
+					mapEntity.addComponent(new ImageRenderComponent("BrickRender", brickImage));
 					mapEntity.setPosition(new Vector2f(col * 16, row * 16 + 300));
 					mapEntities.add(mapEntity);
 				}
@@ -103,10 +99,10 @@ public class Game extends BasicGame {
 	 */
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
-		for(Entity e : mapEntities) {
+		for (Entity e : mapEntities) {
 			e.update(gc, delta);
 		}
-		
+
 		playerEntity.update(gc, delta);
 	}
 
@@ -115,9 +111,9 @@ public class Game extends BasicGame {
 	 */
 	@Override
 	public void render(GameContainer gc, Graphics gr) throws SlickException {
-	
+
 		// Render the map entities
-		for(Entity e : mapEntities) {
+		for (Entity e : mapEntities) {
 			e.render(gc, gr);
 		}
 
