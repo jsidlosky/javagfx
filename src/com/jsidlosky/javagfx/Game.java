@@ -1,123 +1,110 @@
 /**
- * 
+ *
  */
 package com.jsidlosky.javagfx;
-
-import java.util.ArrayList;
-
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
 
 import com.jsidlosky.javagfx.engine.Entity;
 import com.jsidlosky.javagfx.engine.component.CollisionComponent;
 import com.jsidlosky.javagfx.engine.component.movement.PlayerMovementComponent;
 import com.jsidlosky.javagfx.engine.component.render.ImageRenderComponent;
 import com.jsidlosky.javagfx.map.MapData;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Vector2f;
+
+import java.util.ArrayList;
 
 /**
  * @author jsidlosky
- * 
  */
-public class Game extends BasicGame {
+class Game extends BasicGame {
 
-	/**
-	 * Resources
-	 */
-	protected Image brickImage = null;
-	protected Image playerImage = null;
+    /**
+     * Entities
+     */
+    private Entity playerEntity = null;
 
-	/**
-	 * Entities
-	 */
-	Entity playerEntity = null;
+    /**
+     * Level Entities
+     */
+    private final ArrayList<Entity> mapEntities = new ArrayList<Entity>();
 
-	/**
-	 * Level Entities
-	 */
-	ArrayList<Entity> mapEntities = new ArrayList<Entity>();
+    /**
+     * Default constructor.
+     */
+    public Game() {
+        super("javagfx");
+    }
 
-	/**
-	 * Player
-	 */
-	protected final int playerX = 3;
-	protected final int playerY = 2;
+    public Game(String title) {
+        super(title);
+    }
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @throws SlickException
-	 */
-	public Game() throws SlickException {
-		super("javagfx");
-	}
+    /**
+     * Initialize our game. Load our resources from the disk.
+     */
+    @Override
+    public void init(GameContainer gc) throws SlickException {
+        // Set vertical sync to true
+        gc.setVSync(true);
 
-	public Game(String title) {
-		super(title);
-	}
+        // Load our resources
+        /*
+        Resources
+       */
+        Image brickImage = new Image("res/brick.png");
+        Image playerImage = new Image("res/player.png");
 
-	/**
-	 * Initialize our game. Load our resources from the disk.
-	 */
-	@Override
-	public void init(GameContainer gc) throws SlickException {
-		// Set vertical sync to true
-		gc.setVSync(true);
+        playerEntity = new Entity("player");
+        playerEntity.addComponent(new ImageRenderComponent("PlayerRender", playerImage));
+        playerEntity.addComponent(new CollisionComponent("Collision", playerImage.getWidth(),
+                playerImage.getHeight()));
+        playerEntity.addComponent(new PlayerMovementComponent("PlayerMovement"));
 
-		// Load our resources
-		brickImage = new Image("res/brick.png");
-		playerImage = new Image("res/player.png");
+        /* Player */
+        int playerY = 2;
+        int playerX = 3;
+        playerEntity.setPosition(new Vector2f(playerX * 16, playerY * 16 + 300));
 
-		playerEntity = new Entity("player");
-		playerEntity.addComponent(new ImageRenderComponent("PlayerRender", playerImage));
-		playerEntity.addComponent(new CollisionComponent("Collision", playerImage.getWidth(),
-				playerImage.getHeight()));
-		playerEntity.addComponent(new PlayerMovementComponent("PlayerMovement"));
-		playerEntity.setPosition(new Vector2f(playerX * 16, playerY * 16 + 300));
+        // Load the map entities
+        int mapData[][] = MapData.getMapData();
+        for (int row = 0; row < mapData.length; row++) {
 
-		// Load the map entities
-		int mapData[][] = MapData.getMapData();
-		for (int row = 0; row < mapData.length; row++) {
+            for (int col = 0; col < mapData[row].length; col++) {
 
-			for (int col = 0; col < mapData[row].length; col++) {
+                if (mapData[row][col] > 0) {
+                    Entity mapEntity = new Entity("brick");
+                    mapEntity.addComponent(new ImageRenderComponent("BrickRender", brickImage));
+                    mapEntity.setPosition(new Vector2f(col * 16, row * 16 + 300));
+                    mapEntities.add(mapEntity);
+                }
+            }
+        }
+    }
 
-				if (mapData[row][col] > 0) {
-					Entity mapEntity = new Entity("brick");
-					mapEntity.addComponent(new ImageRenderComponent("BrickRender", brickImage));
-					mapEntity.setPosition(new Vector2f(col * 16, row * 16 + 300));
-					mapEntities.add(mapEntity);
-				}
-			}
-		}
-	}
+    /**
+     * Update the game state.
+     */
+    @Override
+    public void update(GameContainer gc, int delta) throws SlickException {
+        for (Entity e : mapEntities) {
+            e.update(gc, delta);
+        }
 
-	/**
-	 * Update the game state.
-	 */
-	@Override
-	public void update(GameContainer gc, int delta) throws SlickException {
-		for (Entity e : mapEntities) {
-			e.update(gc, delta);
-		}
+        playerEntity.update(gc, delta);
+    }
 
-		playerEntity.update(gc, delta);
-	}
+    /**
+     * Render the current game state to the display.
+     */
+    @Override
+    public void render(GameContainer gc, Graphics gr) throws SlickException {
 
-	/**
-	 * Render the current game state to the display.
-	 */
-	@Override
-	public void render(GameContainer gc, Graphics gr) throws SlickException {
+        // Render the map entities
+        for (Entity e : mapEntities) {
+            e.render(gc, gr);
+        }
 
-		// Render the map entities
-		for (Entity e : mapEntities) {
-			e.render(gc, gr);
-		}
-
-		// Render the player
-		playerEntity.render(gc, gr);
-	}
+        // Render the player
+        playerEntity.render(gc, gr);
+    }
 }
