@@ -4,7 +4,7 @@
 package com.jsidlosky.javagfx;
 
 import com.jsidlosky.javagfx.engine.Entity;
-import com.jsidlosky.javagfx.engine.component.CollisionComponent;
+import com.jsidlosky.javagfx.engine.component.collision.CollisionComponent;
 import com.jsidlosky.javagfx.engine.component.movement.PlayerMovementComponent;
 import com.jsidlosky.javagfx.engine.component.render.ImageRenderComponent;
 import com.jsidlosky.javagfx.map.MapData;
