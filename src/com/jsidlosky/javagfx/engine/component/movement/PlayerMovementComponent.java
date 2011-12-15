@@ -16,6 +16,10 @@ import static org.newdawn.slick.Input.*;
  */
 public class PlayerMovementComponent extends Component {
 
+	public PlayerMovementComponent(String id) {
+		this.id = id;
+	}
+
 	@Override
 	public void update(GameContainer gc, int delta) {
 
@@ -27,7 +31,7 @@ public class PlayerMovementComponent extends Component {
 
 		if (input.isKeyDown(KEY_A)) {
 			//rotation += -0.2f * delta;
-			position.x -= 0.2f * delta;
+			position.x -= 0.9f * delta;
 		}
 
 		if (input.isKeyDown(KEY_D)) {
@@ -45,11 +49,11 @@ public class PlayerMovementComponent extends Component {
 		if (input.isKeyDown(KEY_S)) {
 			float hip = -0.4f * delta;
 
-			position.x += hip
-					* java.lang.Math.sin(java.lang.Math.toRadians(rotation));
-			position.y -= hip
-					* java.lang.Math.cos(java.lang.Math.toRadians(rotation));
+			position.x += Math.sin(Math.toRadians(rotation)) * hip;
+			position.y -= Math.cos(Math.toRadians(rotation)) * hip;
 		}
+		// Check for possible collision
+		//if (owner.getComponent("Collision"))
 
 		owner.setPosition(position);
 		owner.setRotation(rotation);

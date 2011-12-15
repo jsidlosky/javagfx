@@ -28,13 +28,6 @@ class Game extends BasicGame {
 	 */
 	private final ArrayList<Entity> mapEntities = new ArrayList<Entity>();
 
-	/**
-	 * Default constructor.
-	 */
-	public Game() {
-		super("javagfx");
-	}
-
 	public Game(String title) {
 		super(title);
 	}

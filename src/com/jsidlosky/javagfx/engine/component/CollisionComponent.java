@@ -11,24 +11,31 @@ import org.newdawn.slick.geom.Polygon;
  */
 public class CollisionComponent extends Component {
 
-    private Polygon boundsPolygon;
+	private Polygon boundsPolygon;
 
-    CollisionComponent(String id, Polygon boundsPolygon) {
-        this.id = id;
-        this.boundsPolygon = boundsPolygon;
-    }
+	CollisionComponent(String id, Polygon boundsPolygon) {
+		this.id = id;
+		this.setBoundsPolygon(boundsPolygon);
+	}
 
-    public CollisionComponent(String id, int width, int height) {
-        this.id = id;
-        this.boundsPolygon = new Polygon(new float[]{0, 0, width, 0, width, height, 0, height});
-    }
+	public CollisionComponent(String id, int width, int height) {
+		this.id = id;
+		this.setBoundsPolygon(new Polygon(new float[]{0, 0, width, 0, width, height, 0, height}));
+	}
 
-    public CollisionComponent(String id) {
+	public CollisionComponent(String id) {
 
-    }
+	}
 
-    @Override
-    public void update(GameContainer gc, int delta) {
-    }
+	@Override
+	public void update(GameContainer gc, int delta) {
+	}
 
+	public Polygon getBoundsPolygon() {
+		return boundsPolygon;
+	}
+
+	public void setBoundsPolygon(Polygon boundsPolygon) {
+		this.boundsPolygon = boundsPolygon;
+	}
 }
